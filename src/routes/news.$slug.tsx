@@ -72,7 +72,7 @@ function NewsDetailPage() {
           <Link className="inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline" to="/">
             بازگشت به میز خبر ←
           </Link>
-          <div className="mt-8 border-l-2 border-accent pl-5">
+          <div className="mt-8 border-r-2 border-accent pr-5">
             <p className="text-sm font-bold text-accent">{article.category}</p>
             <p className="mt-3 text-sm text-muted-foreground">{article.date}</p>
             <p className="mt-1 text-sm text-muted-foreground">{article.readTime}</p>
