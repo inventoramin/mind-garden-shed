@@ -33,10 +33,14 @@ export const Route = createRootRoute({
       { name: "description", content: "Browse curated knowledge updates and open each story for the full text." },
       { name: "author", content: "Archive Desk" },
       { property: "og:title", content: "Archive Desk Knowledge News" },
-      { property: "og:description", content: "A concise knowledge management system for reading curated news stories." },
+      { property: "og:description", content: "Browse curated knowledge updates and open each story for the full text." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Archive Desk Knowledge News" },
+      { name: "twitter:description", content: "Browse curated knowledge updates and open each story for the full text." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/74bea6d1-d40c-44c9-a8eb-4510c9edaa61/id-preview-2345261d--e619d6c4-3f68-4920-9ba6-39cd0a899ecc.lovable.app-1776841333690.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/74bea6d1-d40c-44c9-a8eb-4510c9edaa61/id-preview-2345261d--e619d6c4-3f68-4920-9ba6-39cd0a899ecc.lovable.app-1776841333690.png" },
     ],
     links: [
       {
