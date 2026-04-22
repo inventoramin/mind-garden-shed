@@ -15,7 +15,7 @@ function NewsNotFound() {
   );
 }
 
-export const Route = createFileRoute("/news/")({
+export const Route = createFileRoute("/news/$slug")({
   loader: ({ params }) => {
     const article = getNewsArticle(params.slug);
     if (!article) {
