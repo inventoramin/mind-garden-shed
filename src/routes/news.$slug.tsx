@@ -1,4 +1,4 @@
-import { Link, createFileRoute, notFound } from "@tanstack/react-router";
+import { Link, createFileRoute, notFound, useRouter } from "@tanstack/react-router";
 import { getNewsArticle } from "../data/news";
 
 function NewsNotFound() {
@@ -15,6 +15,30 @@ function NewsNotFound() {
   );
 }
 
+function NewsError({ error, reset }: { error: Error; reset: () => void }) {
+  const router = useRouter();
+
+  return (
+    <main className="min-h-screen bg-background px-6 py-16 text-foreground">
+      <div className="mx-auto max-w-2xl border border-border bg-surface p-8 shadow-editorial">
+        <p className="text-sm font-semibold uppercase tracking-[0.22em] text-accent">Loading error</p>
+        <h1 className="mt-4 text-4xl font-bold text-ink">This story could not be opened.</h1>
+        <p className="mt-4 text-muted-foreground">{error.message}</p>
+        <button
+          className="mt-8 inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline"
+          onClick={() => {
+            router.invalidate();
+            reset();
+          }}
+          type="button"
+        >
+          Try again
+        </button>
+      </div>
+    </main>
+  );
+}
+
 export const Route = createFileRoute("/news/$slug")({
   loader: ({ params }) => {
     const article = getNewsArticle(params.slug);
@@ -24,14 +48,17 @@ export const Route = createFileRoute("/news/$slug")({
     return article;
   },
   head: ({ loaderData }) => ({
-    meta: [
-      { title: `${loaderData.title} — Archive Desk` },
-      { name: "description", content: loaderData.summary },
-      { property: "og:title", content: `${loaderData.title} — Archive Desk` },
-      { property: "og:description", content: loaderData.summary },
-    ],
+    meta: loaderData
+      ? [
+          { title: `${loaderData.title} — Archive Desk` },
+          { name: "description", content: loaderData.summary },
+          { property: "og:title", content: `${loaderData.title} — Archive Desk` },
+          { property: "og:description", content: loaderData.summary },
+        ]
+      : [{ title: "News story — Archive Desk" }],
   }),
   component: NewsDetailPage,
+  errorComponent: NewsError,
   notFoundComponent: NewsNotFound,
 });
 
