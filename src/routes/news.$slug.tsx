@@ -5,10 +5,10 @@ function NewsNotFound() {
   return (
     <main className="min-h-screen bg-background px-6 py-16 text-foreground">
       <div className="mx-auto max-w-2xl border border-border bg-surface p-8 shadow-editorial">
-        <p className="text-sm font-semibold uppercase tracking-[0.22em] text-accent">Missing note</p>
-        <h1 className="mt-4 text-4xl font-bold text-ink">This news item was not found.</h1>
+        <p className="text-sm font-semibold text-accent">یادداشت پیدا نشد</p>
+        <h1 className="mt-4 text-4xl font-bold text-ink">این خبر پیدا نشد.</h1>
         <Link className="mt-8 inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline" to="/">
-          Back to news desk
+          بازگشت به میز خبر
         </Link>
       </div>
     </main>
@@ -21,8 +21,8 @@ function NewsError({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <main className="min-h-screen bg-background px-6 py-16 text-foreground">
       <div className="mx-auto max-w-2xl border border-border bg-surface p-8 shadow-editorial">
-        <p className="text-sm font-semibold uppercase tracking-[0.22em] text-accent">Loading error</p>
-        <h1 className="mt-4 text-4xl font-bold text-ink">This story could not be opened.</h1>
+        <p className="text-sm font-semibold text-accent">خطای بارگذاری</p>
+        <h1 className="mt-4 text-4xl font-bold text-ink">این خبر باز نشد.</h1>
         <p className="mt-4 text-muted-foreground">{error.message}</p>
         <button
           className="mt-8 inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline"
@@ -32,7 +32,7 @@ function NewsError({ error, reset }: { error: Error; reset: () => void }) {
           }}
           type="button"
         >
-          Try again
+          تلاش دوباره
         </button>
       </div>
     </main>
@@ -50,12 +50,12 @@ export const Route = createFileRoute("/news/$slug")({
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [
-          { title: `${loaderData.title} — Archive Desk` },
+          { title: `${loaderData.title} — میز آرشیو` },
           { name: "description", content: loaderData.summary },
-          { property: "og:title", content: `${loaderData.title} — Archive Desk` },
+          { property: "og:title", content: `${loaderData.title} — میز آرشیو` },
           { property: "og:description", content: loaderData.summary },
         ]
-      : [{ title: "News story — Archive Desk" }],
+      : [{ title: "خبر — میز آرشیو" }],
   }),
   component: NewsDetailPage,
   errorComponent: NewsError,
@@ -70,10 +70,10 @@ function NewsDetailPage() {
       <article className="mx-auto grid max-w-6xl gap-10 px-6 py-10 lg:grid-cols-[260px_1fr] lg:py-16">
         <aside className="editorial-reveal lg:sticky lg:top-10 lg:self-start">
           <Link className="inline-flex text-sm font-semibold text-primary underline-offset-4 hover:underline" to="/">
-            ← News desk
+            بازگشت به میز خبر ←
           </Link>
-          <div className="mt-8 border-l-2 border-accent pl-5">
-            <p className="text-sm font-bold uppercase tracking-[0.24em] text-accent">{article.category}</p>
+          <div className="mt-8 border-r-2 border-accent pr-5">
+            <p className="text-sm font-bold text-accent">{article.category}</p>
             <p className="mt-3 text-sm text-muted-foreground">{article.date}</p>
             <p className="mt-1 text-sm text-muted-foreground">{article.readTime}</p>
           </div>
