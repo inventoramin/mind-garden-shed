@@ -4,15 +4,15 @@ import { newsArticles } from "../data/news";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Archive Desk Knowledge News" },
+      { title: "میز آرشیو خبرهای دانش" },
       {
         name: "description",
-        content: "Browse curated knowledge updates by title and open each story for full text.",
+        content: "خبرهای منتخب مدیریت دانش را با عنوان مرور کنید و متن کامل هر خبر را بخوانید.",
       },
-      { property: "og:title", content: "Archive Desk Knowledge News" },
+      { property: "og:title", content: "میز آرشیو خبرهای دانش" },
       {
         property: "og:description",
-        content: "A focused knowledge management news reader with title lists and full article pages.",
+        content: "یک خبرخوان فارسی برای مدیریت دانش با فهرست عنوان‌ها و صفحه کامل هر خبر.",
       },
     ],
   }),
@@ -25,19 +25,19 @@ function Index() {
       <section className="mx-auto max-w-7xl px-6 py-8 sm:py-12 lg:py-16">
         <header className="editorial-reveal grid gap-8 border-b border-border pb-10 lg:grid-cols-[1fr_360px] lg:items-end">
           <div>
-            <p className="text-sm font-bold uppercase tracking-[0.28em] text-accent">Knowledge management system</p>
+            <p className="text-sm font-bold text-accent">سیستم مدیریت دانش</p>
             <h1 className="mt-5 max-w-5xl text-6xl font-bold leading-[0.9] text-ink sm:text-7xl lg:text-8xl">
-              Archive Desk
+              میز آرشیو
             </h1>
             <p className="mt-6 max-w-2xl text-xl leading-8 text-muted-foreground">
-              A calm reading room for curated news: scan titles, open the story, and keep the full text close to the source.
+              یک اتاق مطالعه آرام برای خبرهای منتخب: عنوان‌ها را مرور کنید، خبر را باز کنید و متن کامل را نزدیک به منبع نگه دارید.
             </p>
           </div>
           <div className="border border-border bg-surface p-6 shadow-editorial backdrop-blur">
             <p className="text-4xl font-bold text-primary">{newsArticles.length}</p>
-            <p className="mt-2 text-sm font-semibold uppercase tracking-[0.18em] text-muted-foreground">Filed stories</p>
+            <p className="mt-2 text-sm font-semibold text-muted-foreground">خبر ثبت‌شده</p>
             <p className="mt-5 text-sm leading-6 text-muted-foreground">
-              Updated editorially for teams that need fast access to reliable knowledge.
+              برای تیم‌هایی به‌روز می‌شود که به دسترسی سریع به دانش قابل اعتماد نیاز دارند.
             </p>
           </div>
         </header>
@@ -56,7 +56,7 @@ function Index() {
               </div>
               <div className="editorial-reveal">
                 <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
-                  <span className="font-bold uppercase tracking-[0.18em] text-accent">{article.category}</span>
+                  <span className="font-bold text-accent">{article.category}</span>
                   <span>{article.date}</span>
                   <span>{article.readTime}</span>
                 </div>
@@ -65,8 +65,8 @@ function Index() {
                 </h2>
                 <p className="mt-3 max-w-3xl leading-7 text-muted-foreground">{article.summary}</p>
               </div>
-              <span className="editorial-reveal text-3xl text-primary transition-transform group-hover:translate-x-1" aria-hidden="true">
-                →
+              <span className="editorial-reveal text-3xl text-primary transition-transform group-hover:-translate-x-1" aria-hidden="true">
+                ←
               </span>
             </Link>
           ))}
