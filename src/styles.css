@@ -72,8 +72,8 @@
 
 :root {
   --radius: 0.5rem;
-  --font-display: Georgia, "Times New Roman", serif;
-  --font-body: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-display: Vazirmatn, "Noto Naskh Arabic", "Noto Sans Arabic", Tahoma, ui-sans-serif, system-ui, sans-serif;
+  --font-body: Vazirmatn, "Noto Sans Arabic", Tahoma, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   --background: oklch(0.969 0.018 83.64);
   --foreground: oklch(0.184 0.027 63.02);
   --card: oklch(0.991 0.01 86.57);
@@ -160,6 +160,7 @@
     color: var(--color-foreground);
     font-family: var(--font-body);
     letter-spacing: 0;
+    text-align: start;
     background-image:
       linear-gradient(90deg, oklch(0.278 0.053 55.72 / 4%) 1px, transparent 1px),
       linear-gradient(oklch(0.278 0.053 55.72 / 4%) 1px, transparent 1px);
@@ -189,7 +190,7 @@
   }
 
   .press-hover:hover {
-    transform: translateY(-4px) rotate(-0.15deg);
+    transform: translateY(-4px) rotate(0.15deg);
     box-shadow: var(--shadow-lift);
   }
 }
