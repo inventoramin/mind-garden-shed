@@ -40,8 +40,8 @@ function NewsError({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createFileRoute("/news/$slug")({
-  loader: ({ params }) => {
-    const article = getNewsArticle(params.slug);
+  loader: async ({ params }) => {
+    const article = await getNewsArticle(params.slug);
     if (!article) {
       throw notFound();
     }
