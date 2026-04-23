@@ -5,15 +5,17 @@ export type NewsArticle = {
   date: string;
   readTime: string;
   summary: string;
-  body: string[];
+  body?: string[];
 };
 
-type NewsArticleResponse = NewsArticle | { article: NewsArticle | null } | null;
+export type FullNewsArticle = NewsArticle & { body: string[] };
+
+type NewsArticleResponse = FullNewsArticle | { article: FullNewsArticle | null } | null;
 type NewsArticlesResponse = NewsArticle[] | { articles: NewsArticle[] };
 
 const API_BASE_URL = import.meta.env.VITE_NEWS_API_BASE_URL?.replace(/\/$/, "");
 
-export const newsArticles: NewsArticle[] = [
+export const newsArticles: FullNewsArticle[] = [
   {
     slug: "knowledge-graphs-in-organizations",
     title: "گراف‌های دانش به مرکز تصمیم‌گیری سازمان‌ها می‌آیند",
@@ -80,9 +82,36 @@ function extractArticle(data: NewsArticleResponse) {
   return data && "article" in data ? data.article : data;
 }
 
+let cachedArticles: NewsArticle[] | null = null;
+const articleCache = new Map<string, NewsArticle>();
+
+function hasFullBody(article: NewsArticle | null | undefined): article is FullNewsArticle {
+  return Array.isArray(article?.body) && article.body.length > 0;
+}
+
+function storeArticles(articles: NewsArticle[]) {
+  cachedArticles = articles;
+  articles.forEach((article) => {
+    const existing = articleCache.get(article.slug);
+    articleCache.set(article.slug, { ...article, body: article.body ?? existing?.body });
+  });
+  return articles;
+}
+
+function storeArticle(article: FullNewsArticle | null) {
+  if (article) {
+    articleCache.set(article.slug, { ...articleCache.get(article.slug), ...article });
+  }
+  return article;
+}
+
 export async function getNewsArticles() {
+  if (cachedArticles) {
+    return cachedArticles;
+  }
+
   if (!API_BASE_URL) {
-    return newsArticles;
+    return storeArticles(newsArticles);
   }
 
   const response = await fetch(`${API_BASE_URL}/news`);
@@ -90,12 +119,17 @@ export async function getNewsArticles() {
     throw new Error("فهرست خبرها از API دریافت نشد.");
   }
 
-  return extractArticles((await response.json()) as NewsArticlesResponse);
+  return storeArticles(extractArticles((await response.json()) as NewsArticlesResponse));
 }
 
 export async function getNewsArticle(slug: string) {
+  const cachedArticle = articleCache.get(slug);
+  if (hasFullBody(cachedArticle)) {
+    return cachedArticle;
+  }
+
   if (!API_BASE_URL) {
-    return newsArticles.find((article) => article.slug === slug) ?? null;
+    return storeArticle(newsArticles.find((article) => article.slug === slug) ?? null);
   }
 
   const response = await fetch(`${API_BASE_URL}/news/${encodeURIComponent(slug)}`);
@@ -106,5 +140,5 @@ export async function getNewsArticle(slug: string) {
     throw new Error("خبر از API دریافت نشد.");
   }
 
-  return extractArticle((await response.json()) as NewsArticleResponse);
+  return storeArticle(extractArticle((await response.json()) as NewsArticleResponse));
 }
