@@ -1,5 +1,6 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { getNewsArticles } from "../data/news";
+import { useEffect } from "react";
+import { getNewsArticles, hydrateNewsArticleCache } from "../data/news";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -17,11 +18,16 @@ export const Route = createFileRoute("/")({
     ],
   }),
   loader: () => getNewsArticles(),
+  staleTime: Infinity,
   component: Index,
 });
 
 function Index() {
   const newsArticles = Route.useLoaderData();
+
+  useEffect(() => {
+    hydrateNewsArticleCache(newsArticles);
+  }, [newsArticles]);
 
   return (
     <main className="min-h-screen bg-background text-foreground">

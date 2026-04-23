@@ -47,6 +47,7 @@ export const Route = createFileRoute("/news/$slug")({
     }
     return article;
   },
+  staleTime: Infinity,
   head: ({ loaderData }) => ({
     meta: loaderData
       ? [

@@ -98,6 +98,10 @@ function storeArticles(articles: NewsArticle[]) {
   return articles;
 }
 
+export function hydrateNewsArticleCache(articles: NewsArticle[]) {
+  storeArticles(articles);
+}
+
 function storeArticle(article: FullNewsArticle | null) {
   if (article) {
     articleCache.set(article.slug, { ...articleCache.get(article.slug), ...article });
