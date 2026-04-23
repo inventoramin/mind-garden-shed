@@ -1,5 +1,5 @@
 import { Link, createFileRoute } from "@tanstack/react-router";
-import { newsArticles } from "../data/news";
+import { getNewsArticles } from "../data/news";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,10 +16,13 @@ export const Route = createFileRoute("/")({
       },
     ],
   }),
+  loader: () => getNewsArticles(),
   component: Index,
 });
 
 function Index() {
+  const newsArticles = Route.useLoaderData();
+
   return (
     <main className="min-h-screen bg-background text-foreground">
       <section className="mx-auto max-w-7xl px-6 py-8 sm:py-12 lg:py-16">

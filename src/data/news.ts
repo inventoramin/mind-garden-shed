@@ -8,6 +8,11 @@ export type NewsArticle = {
   body: string[];
 };
 
+type NewsArticleResponse = NewsArticle | { article: NewsArticle | null } | null;
+type NewsArticlesResponse = NewsArticle[] | { articles: NewsArticle[] };
+
+const API_BASE_URL = import.meta.env.VITE_NEWS_API_BASE_URL?.replace(/\/$/, "");
+
 export const newsArticles: NewsArticle[] = [
   {
     slug: "knowledge-graphs-in-organizations",
@@ -67,6 +72,39 @@ export const newsArticles: NewsArticle[] = [
   },
 ];
 
-export function getNewsArticle(slug: string) {
-  return newsArticles.find((article) => article.slug === slug);
+function extractArticles(data: NewsArticlesResponse) {
+  return Array.isArray(data) ? data : data.articles;
+}
+
+function extractArticle(data: NewsArticleResponse) {
+  return data && "article" in data ? data.article : data;
+}
+
+export async function getNewsArticles() {
+  if (!API_BASE_URL) {
+    return newsArticles;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/news`);
+  if (!response.ok) {
+    throw new Error("فهرست خبرها از API دریافت نشد.");
+  }
+
+  return extractArticles((await response.json()) as NewsArticlesResponse);
+}
+
+export async function getNewsArticle(slug: string) {
+  if (!API_BASE_URL) {
+    return newsArticles.find((article) => article.slug === slug) ?? null;
+  }
+
+  const response = await fetch(`${API_BASE_URL}/news/${encodeURIComponent(slug)}`);
+  if (response.status === 404) {
+    return null;
+  }
+  if (!response.ok) {
+    throw new Error("خبر از API دریافت نشد.");
+  }
+
+  return extractArticle((await response.json()) as NewsArticleResponse);
 }
