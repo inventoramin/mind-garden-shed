@@ -14,6 +14,7 @@ type NewsArticleResponse = FullNewsArticle | { article: FullNewsArticle | null }
 type NewsArticlesResponse = NewsArticle[] | { articles: NewsArticle[] };
 
 const API_BASE_URL = import.meta.env.VITE_NEWS_API_BASE_URL?.replace(/\/$/, "");
+const API_NEWS_PATH = "/api/v1/answers";
 
 export const newsArticles: FullNewsArticle[] = [
   {
@@ -118,7 +119,7 @@ export async function getNewsArticles() {
     return storeArticles(newsArticles);
   }
 
-  const response = await fetch(`${API_BASE_URL}/news`);
+  const response = await fetch(`${API_BASE_URL}${API_NEWS_PATH}/`);
   if (!response.ok) {
     throw new Error("فهرست خبرها از API دریافت نشد.");
   }
@@ -136,7 +137,7 @@ export async function getNewsArticle(slug: string) {
     return storeArticle(newsArticles.find((article) => article.slug === slug) ?? null);
   }
 
-  const response = await fetch(`${API_BASE_URL}/news/${encodeURIComponent(slug)}`);
+  const response = await fetch(`${API_BASE_URL}${API_NEWS_PATH}/${encodeURIComponent(slug)}`);
   if (response.status === 404) {
     return null;
   }
