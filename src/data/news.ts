@@ -74,17 +74,35 @@ export const newsArticles: FullNewsArticle[] = [
 let cachedArticles: NewsArticle[] | null = null;
 const articleCache = new Map<string, NewsArticle>();
 
+function normalizeBody(body: unknown) {
+  if (Array.isArray(body)) {
+    return body.map(String).filter(Boolean);
+  }
+  if (typeof body === "string") {
+    return body
+      .split(/\n{2,}/)
+      .map((paragraph) => paragraph.trim())
+      .filter(Boolean);
+  }
+  return undefined;
+}
+
+function normalizeArticle<T extends NewsArticle>(article: T) {
+  return { ...article, body: normalizeBody(article.body) };
+}
+
 function hasFullBody(article: NewsArticle | null | undefined): article is FullNewsArticle {
   return Array.isArray(article?.body) && article.body.length > 0;
 }
 
 function storeArticles(articles: NewsArticle[]) {
-  cachedArticles = articles;
-  articles.forEach((article) => {
+  const normalizedArticles = articles.map(normalizeArticle);
+  cachedArticles = normalizedArticles;
+  normalizedArticles.forEach((article) => {
     const existing = articleCache.get(article.slug);
     articleCache.set(article.slug, { ...article, body: article.body ?? existing?.body });
   });
-  return articles;
+  return normalizedArticles;
 }
 
 export function hydrateNewsArticleCache(articles: NewsArticle[]) {
@@ -93,7 +111,9 @@ export function hydrateNewsArticleCache(articles: NewsArticle[]) {
 
 function storeArticle(article: FullNewsArticle | null) {
   if (article) {
-    articleCache.set(article.slug, { ...articleCache.get(article.slug), ...article });
+    const normalizedArticle = normalizeArticle(article);
+    articleCache.set(article.slug, { ...articleCache.get(article.slug), ...normalizedArticle });
+    return normalizedArticle;
   }
   return article;
 }
