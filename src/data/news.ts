@@ -10,11 +10,7 @@ export type NewsArticle = {
 
 export type FullNewsArticle = NewsArticle & { body: string[] };
 
-type NewsArticleResponse = FullNewsArticle | { article: FullNewsArticle | null } | null;
-type NewsArticlesResponse = NewsArticle[] | { articles: NewsArticle[] };
-
-const API_BASE_URL = import.meta.env.VITE_NEWS_API_BASE_URL?.replace(/\/$/, "");
-const API_NEWS_PATH = "/api/v1/answers";
+import { getRemoteNewsArticle, getRemoteNewsArticles } from "../server/news.functions";
 
 export const newsArticles: FullNewsArticle[] = [
   {
@@ -75,14 +71,6 @@ export const newsArticles: FullNewsArticle[] = [
   },
 ];
 
-function extractArticles(data: NewsArticlesResponse) {
-  return Array.isArray(data) ? data : data.articles;
-}
-
-function extractArticle(data: NewsArticleResponse) {
-  return data && "article" in data ? data.article : data;
-}
-
 let cachedArticles: NewsArticle[] | null = null;
 const articleCache = new Map<string, NewsArticle>();
 
@@ -115,16 +103,15 @@ export async function getNewsArticles() {
     return cachedArticles;
   }
 
-  if (!API_BASE_URL) {
+  try {
+    const remoteArticles = await getRemoteNewsArticles();
+    return storeArticles(remoteArticles ?? newsArticles);
+  } catch (error) {
+    if (articleCache.size > 0) {
+      return Array.from(articleCache.values());
+    }
     return storeArticles(newsArticles);
   }
-
-  const response = await fetch(`${API_BASE_URL}${API_NEWS_PATH}/`);
-  if (!response.ok) {
-    throw new Error("فهرست خبرها از API دریافت نشد.");
-  }
-
-  return storeArticles(extractArticles((await response.json()) as NewsArticlesResponse));
 }
 
 export async function getNewsArticle(slug: string) {
@@ -133,17 +120,19 @@ export async function getNewsArticle(slug: string) {
     return cachedArticle;
   }
 
-  if (!API_BASE_URL) {
+  try {
+    return storeArticle(
+      (await getRemoteNewsArticle({ data: { slug } })) ??
+        newsArticles.find((article) => article.slug === slug) ??
+        null,
+    );
+  } catch (error) {
+    if (cachedArticle) {
+      return storeArticle({
+        ...cachedArticle,
+        body: cachedArticle.body?.length ? cachedArticle.body : [cachedArticle.summary],
+      });
+    }
     return storeArticle(newsArticles.find((article) => article.slug === slug) ?? null);
   }
-
-  const response = await fetch(`${API_BASE_URL}${API_NEWS_PATH}/${encodeURIComponent(slug)}`);
-  if (response.status === 404) {
-    return null;
-  }
-  if (!response.ok) {
-    throw new Error("خبر از API دریافت نشد.");
-  }
-
-  return storeArticle(extractArticle((await response.json()) as NewsArticleResponse));
 }
