@@ -65,6 +65,7 @@ export const Route = createFileRoute("/news/$slug")({
 
 function NewsDetailPage() {
   const article = Route.useLoaderData();
+  const bodyParagraphs = Array.isArray(article.body) ? article.body : [article.summary];
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -87,7 +88,7 @@ function NewsDetailPage() {
           <p className="mt-8 max-w-3xl text-xl leading-8 text-muted-foreground">{article.summary}</p>
           <div className="mt-10 h-px bg-border" />
           <div className="mt-10 space-y-7 text-lg leading-9 text-foreground">
-            {article.body.map((paragraph) => (
+            {bodyParagraphs.map((paragraph) => (
               <p key={paragraph}>{paragraph}</p>
             ))}
           </div>
