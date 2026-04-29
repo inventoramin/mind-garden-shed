@@ -61,11 +61,11 @@ npm run format    # فرمت‌کردن فایل‌ها
 اپ فعلی برای بک‌اند خارجی این endpointها را می‌خواند:
 
 ```http
-GET /news
-GET /news/:slug
+GET /api/v1/answers/
+GET /api/v1/answers/:slug
 ```
 
-آدرس کامل با مقدار `VITE_NEWS_API_BASE_URL` ساخته می‌شود؛ برای مثال اگر مقدار آن `https://your-backend.com/api` باشد، اپ از `https://your-backend.com/api/news` و `https://your-backend.com/api/news/:slug` استفاده می‌کند.
+آدرس کامل با مقدار `VITE_NEWS_API_BASE_URL` ساخته می‌شود؛ برای مثال اگر مقدار آن `https://your-backend.com` باشد، اپ از `https://your-backend.com/api/v1/answers/` و `https://your-backend.com/api/v1/answers/:slug` استفاده می‌کند.
 
 پاسخ `GET /news` می‌تواند یکی از این دو شکل باشد:
 
@@ -92,7 +92,17 @@ GET /news/:slug
 پاسخ `GET /news/:slug` می‌تواند خود آبجکت خبر یا این شکل باشد:
 
 ```json
-{ "article": { "slug": "sample-news", "title": "عنوان خبر", "category": "دسته‌بندی", "date": "۲ اردیبهشت ۱۴۰۵", "readTime": "۴ دقیقه مطالعه", "summary": "خلاصه خبر", "body": ["متن خبر"] } }
+{
+  "article": {
+    "slug": "sample-news",
+    "title": "عنوان خبر",
+    "category": "دسته‌بندی",
+    "date": "۲ اردیبهشت ۱۴۰۵",
+    "readTime": "۴ دقیقه مطالعه",
+    "summary": "خلاصه خبر",
+    "body": ["متن خبر"]
+  }
+}
 ```
 
 برای اتصال این اپ به بک‌اند داخلی، Lovable Cloud را فعال کنید تا دیتابیس، احراز هویت، ذخیره‌سازی فایل و توابع سمت سرور در دسترس باشد.
